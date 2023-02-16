@@ -4,14 +4,17 @@
   "description": "",
   "main": "",
   "scripts": {
-    "ts-node": "ts-node-esm --experimentalSpecifierResolution=node ./src/app.ts",
-    "ts-node-transpile": "ts-node-esm --experimentalSpecifierResolution=node --transpileOnly ./src/app.ts",
-    "build": "rimraf lib && tsc"
+    "ts-exec": "ts-node-esm --experimentalSpecifierResolution=node ./src/app.ts",
+    "exec": "yarn run build && node --experimental-specifier-resolution=node ./dist/app.js",
+    "demo": "ts-node-esm --experimentalSpecifierResolution=node ./src/app-demo.ts",
+    "build": "rimraf dist && tsc"
   },
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@ldb/logger": "^1.0.2",
     "openpgp": "^5.5.0",
+    "rimraf": "^4.1.2",
     "sc-ts-ftp": "0.3.10",
     "telegraf": "^4.11.2",
     "ts-node": "^10.9.1"
@@ -19,7 +22,6 @@
   "devDependencies": {
     "@openpgp/web-stream-tools": "^0.0.13",
     "@types/node": "^18.11.19",
-    "rimraf": "^4.1.2",
     "typescript": "^4.9.5"
   }
 }

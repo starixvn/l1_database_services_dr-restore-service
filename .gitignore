@@ -11,3 +11,6 @@ junit.xml
 /*.[jt]s
 
 **/*.log
+
+/files
+/secrets

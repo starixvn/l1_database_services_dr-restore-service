@@ -28,7 +28,7 @@ export async function deleteFilesBeforeTime(ftpClient: FTP, listPath: string, ti
     const tasks = files.map(async (file) => {
         const fullPath = `${listPath}/${file.name}`;
         await ftpClient.delete(fullPath);
-        return fullPath;
+        return file.name;
     });
     return Promise.all(tasks);
 }

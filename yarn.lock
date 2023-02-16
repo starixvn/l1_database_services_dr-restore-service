@@ -27,6 +27,25 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@ldb/ansi-esc@1.0.0":
+  version "1.0.0"
+  resolved "http://npm.lumigame.com/@ldb%2fansi-esc/-/ansi-esc-1.0.0.tgz#8915b97d127d188f8b07525280fdbf079210c065"
+  integrity sha512-xpcrRB6dr3/R22jJLldER4/JA41Hk7AoF4SkPA57RSyuRMMG5/bq9jnG4Uo5Hi6PTjDUl7K6I/gk9wxy4dPk/A==
+
+"@ldb/logger@^1.0.2":
+  version "1.0.2"
+  resolved "http://npm.lumigame.com/@ldb%2flogger/-/logger-1.0.2.tgz#dd232dd18e1ddea3510cd1ddb3b20eca92677704"
+  integrity sha512-zakz7f/DtOeIkFzIQ2WSuUvHvmMpU6HlF7qgzJecb9fFMZeTSkLKms5LGnzLa46Ygt/hGCawE5xF8eDgSXjsow==
+  dependencies:
+    "@ldb/terminal-paint" "1.0.0"
+
+"@ldb/terminal-paint@1.0.0":
+  version "1.0.0"
+  resolved "http://npm.lumigame.com/@ldb%2fterminal-paint/-/terminal-paint-1.0.0.tgz#ae1f1cb9ace88bd298cedf2ae12250122a5a5857"
+  integrity sha512-7o5xPsm3YoOF3Ke4CPMHDIPpteiEZzeT9gjZxEcFOcgNDdqlyHuhxo9lvU3ey8WEiywFmp0VLwsGCREUnmPC2A==
+  dependencies:
+    "@ldb/ansi-esc" "1.0.0"
+
 "@openpgp/web-stream-tools@^0.0.13":
   version "0.0.13"
   resolved "http://npm.lumigame.com/@openpgp%2fweb-stream-tools/-/web-stream-tools-0.0.13.tgz#f0be50120c152efb11b65df29ab482dc192dbbd7"
