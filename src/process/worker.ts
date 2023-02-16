@@ -63,6 +63,7 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
     listFiles.sort(compareDateDesc);
 
     if (!listFiles.length) {
+        logger.info(undefined, label, `No new files to process`);
         return lastDate;
     }
 
