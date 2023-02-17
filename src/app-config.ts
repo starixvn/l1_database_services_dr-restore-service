@@ -32,5 +32,5 @@ export const TARGETS: { [f: string]: SystemTarget } = {
 
 export const TELEGRAM_CONFIG = {
     API_KEY: "5405966017:AAH2jbB8PDs5KWeXKdZzQVwQgJOaE6wNYAA",
-    CHAT_ID: -1001878783539,
+    CHAT_ID: null,
 };
