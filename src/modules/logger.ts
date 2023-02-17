@@ -17,7 +17,7 @@ const EMOTICON = {
 }
 
 function buildTelegramMessage(level: LogLevel, message?: unknown, label?: string, subject?: string): string {
-    const teleLabel = escapeMarkdownV2(label ? `[${label}]` : "");
+    const teleLabel = escapeMarkdownV2(label ? `[ DR Restore ${label} ]` : "");
     const teleSubject = escapeMarkdownV2(subject);
     const teleMessage = message instanceof Error ? escapeMarkdownV2(message.stack ?? message.toString()) : String(message ?? "");
 
