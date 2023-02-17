@@ -1,0 +1,33 @@
+{
+  "name": "dr-restore-service",
+  "version": "0.1.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "ts-exec": "ts-node-esm --experimentalSpecifierResolution=node ./src/app.ts",
+    "exec": "yarn run build:node && node --experimental-specifier-resolution=node ./dist/app.js",
+    "demo": "ts-node-esm --experimentalSpecifierResolution=node ./src/app-demo.ts",
+    "build:node": "rimraf dist && tsc",
+    "build:docker": "docker build --tag \"hub.lumigame.com/ldb/${npm_package_name}:${npm_package_version}\" --file Dockerfile .",
+    "tag:latest": "docker tag \"hub.lumigame.com/ldb/${npm_package_name}:${npm_package_version}\" \"hub.lumigame.com/ldb/${npm_package_name}:latest\"",
+    "push:version": "docker push \"hub.lumigame.com/ldb/${npm_package_name}:${npm_package_version}\"",
+    "push:latest": "docker push \"hub.lumigame.com/ldb/${npm_package_name}:latest\"",
+    "push:docker": "yarn run tag:latest && yarn run push:version && yarn run push:latest",
+    "prepublish": "yarn run build:docker",
+    "publish": "yarn run push:docker"
+  },
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@ldb/logger": "^1.0.2",
+    "@openpgp/web-stream-tools": "^0.0.13",
+    "@types/node": "^18.11.19",
+    "openpgp": "^5.5.0",
+    "rimraf": "^4.1.2",
+    "sc-ts-ftp": "0.3.10",
+    "telegraf": "^4.11.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {}
+}

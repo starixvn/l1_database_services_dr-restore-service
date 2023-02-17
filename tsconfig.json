@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "lib": ["ES6"],
+        "sourceMap": false,
+        "declaration": true,
+        "declarationMap": false,
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "allowJs": true,
+        "checkJs": false,
+        "module": "ES6",
+        "target": "ES6",
+        "esModuleInterop": true,
+        "removeComments": true
+    },
+    "include": ["src/**/*"],
+    "ts-node": {
+        "experimentalSpecifierResolution": "node",
+    }
+}
