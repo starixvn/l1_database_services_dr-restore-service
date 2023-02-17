@@ -9,7 +9,7 @@ export async function primaryProcess() {
     Object.keys(TARGETS).forEach((system) => {
         const worker = cluster.fork({ SERVICE_SYSTEM: system });
         worker.on("disconnect", () => {
-            logger.err(undefined, label, `Worker ${system} has disconnected`);
+            logger.info(undefined, label, `Worker ${system} has disconnected`);
         });
         worker.on("error", (error) => {
             logger.err(error, label, `Worker ${system} encountered an error`);
