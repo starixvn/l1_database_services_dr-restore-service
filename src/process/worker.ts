@@ -85,7 +85,7 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
                 await logger.warn(err, label, `(${code}) ${file.name}`);
                 process.exit(code);
             } else {
-                await logger.fatal(err, label, `Encountered an error while processing file ${file.name}`);
+                await logger.err(err, label, `Encountered an error while processing file ${file.name}`);
                 return latestDate;
             }
         }
