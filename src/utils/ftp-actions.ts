@@ -9,14 +9,16 @@ const RETRY_WAIT = 10000;
 export async function connectFTP(config: Options, maxRetry = 5): Promise<FTP> {
     const ftpClient = new FTP();
     const { host, port } = config;
+    const label = `FTP ${host}:${port}`;
 
     let retry = 1;
     while (retry <= maxRetry) {
         try {
             await ftpClient.connect(config);
+            break;
         } catch (err: unknown) {
             if (err instanceof Error) {
-                logger.info(undefined, `FTP ${host}:${port}`, `[${retry}] ${err.message}`);
+                logger.info(undefined, label, `[${retry}] ${err.message}`);
             }
             await new Promise((resolve) => setTimeout(resolve, RETRY_WAIT))
             retry++;
