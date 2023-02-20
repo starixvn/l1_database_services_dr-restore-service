@@ -69,9 +69,10 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
 
     logger.info(undefined, label, `Listed ${listFiles.length} files to process`);
 
+    let file: ListingElement;
     while (listFiles.length) {
         try {
-            const file = listFiles.pop();
+            file = listFiles.pop();
             await fileHandlingProcess(handlers, system, target, file);
             latestDate = file.date;
         } catch (err: unknown) {
@@ -79,11 +80,12 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
             if (Object.keys(err).includes("code")) {
                 code = (err as ErrorWithCode).code;
             }
-            await logger.fatal(err, label, `(${code}) Encountered an error while processing files`);
 
             if (![550].includes(code)) {
+                await logger.warn(err, label, `(${code}) ${file.name}`);
                 process.exit(code);
             } else {
+                await logger.fatal(err, label, `Encountered an error while processing file ${file.name}`);
                 return latestDate;
             }
         }
