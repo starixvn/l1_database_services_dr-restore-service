@@ -2,7 +2,7 @@ import { ListingElement } from "sc-ts-ftp";
 import { FTP_CONFIG, PRIVATE_KEY_PATH, TARGETS } from "../app-config";
 import { Git, escapeMarkdownV2, logger } from "../modules";
 import { compareDateAsc, compareDateDesc, connectFTP, deleteFilesBeforeTime, downloadAndDecryptFile, isSquashFile, readPrivateKeyFile, rimraf } from "../utils";
-import { Handlers, SystemTarget } from "../interfaces";
+import { ErrorWithCode, Handlers, SystemTarget } from "../interfaces";
 import { resolve } from "path";
 
 async function fileCleanupProcess(handlers: Handlers, system: string, target: SystemTarget, expiredDate: Date): Promise<void> {
@@ -69,14 +69,25 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
 
     logger.info(undefined, label, `Listed ${listFiles.length} files to process`);
 
+    let file: ListingElement;
     while (listFiles.length) {
         try {
-            const file = listFiles.pop();
-            latestDate = file.date;
+            file = listFiles.pop();
             await fileHandlingProcess(handlers, system, target, file);
+            latestDate = file.date;
         } catch (err: unknown) {
-            await logger.fatal(err, label, "Encountered an error while processing files");
-            process.exit(100);
+            let code = 100;
+            if (Object.keys(err).includes("code")) {
+                code = (err as ErrorWithCode).code;
+            }
+
+            if (![550].includes(code)) {
+                await logger.warn(err, label, `(${code}) ${file.name}`);
+                process.exit(code);
+            } else {
+                await logger.err(err, label, `Encountered an error while processing file ${file.name}`);
+                return latestDate;
+            }
         }
     }
 
