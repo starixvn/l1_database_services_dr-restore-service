@@ -47,7 +47,7 @@ async function fileHandlingProcess(handlers: Handlers, system: string, target: S
     return name;
 }
 
-async function loopProcess(handlers: Handlers, system: string, target: SystemTarget, lastDate?: Date): Promise<Date> {
+async function loopProcess(handlers: Handlers, system: string, target: SystemTarget, lastDate: Date): Promise<Date> {
     const label = `Loop ${system}`;
 
     const { ftpClient } = handlers;
@@ -69,23 +69,26 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
 
     logger.info(undefined, label, `Listed ${listFiles.length} files to process`);
 
-    let file: ListingElement;
-    while (listFiles.length) {
+    let file: ListingElement | undefined;
+    while (listFiles.length > 0) {
         try {
             file = listFiles.pop();
+            if (!file) {
+                break;
+            }
             await fileHandlingProcess(handlers, system, target, file);
             latestDate = file.date;
         } catch (err: unknown) {
             let code = 100;
-            if (Object.keys(err).includes("code")) {
+            if (Object.keys(err as Object).includes("code")) {
                 code = (err as ErrorWithCode).code;
             }
 
             if (![550].includes(code)) {
-                await logger.warn(err, label, `(${code}) ${file.name}`);
+                await logger.warn(err, label, `(${code}) ${file?.name}`);
                 process.exit(code);
             } else {
-                await logger.err(err, label, `Encountered an error while processing file ${file.name}`);
+                await logger.err(err, label, `Encountered an error while processing file ${file?.name}`);
                 return latestDate;
             }
         }
@@ -100,7 +103,9 @@ async function startupProcess(handlers: Handlers, system: string, target: System
     const squashFiles = await ftpClient.list(`${ftpPath}/*Squash*`);
     squashFiles.sort(compareDateAsc);
     const latestSquash = squashFiles.pop();
-    await fileCleanupProcess(handlers, system, target, latestSquash.date);
+    if (latestSquash) {
+        await fileCleanupProcess(handlers, system, target, latestSquash.date);
+    }
 }
 
 export async function workerProcess() {
@@ -121,7 +126,7 @@ export async function workerProcess() {
     const handlers: Handlers = { ftpClient, privateKey, git };
     await startupProcess(handlers, system, target);
 
-    let lastDate: Date = null;
+    let lastDate: Date = new Date(0);
     while (true) {
         lastDate = await loopProcess(handlers, system, target, lastDate);
         await new Promise((resolve) => {

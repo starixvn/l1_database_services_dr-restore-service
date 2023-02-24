@@ -20,7 +20,7 @@ export async function connectFTP(config: Options, maxRetry = 5): Promise<FTP> {
             if (err instanceof Error) {
                 logger.info(undefined, label, `[${retry}] ${err.message}`);
             }
-            await new Promise((resolve) => setTimeout(resolve, RETRY_WAIT))
+            await new Promise((resolve) => setTimeout(resolve, RETRY_WAIT));
             retry++;
             if (retry > maxRetry) {
                 const error = err as ErrorWithCode;

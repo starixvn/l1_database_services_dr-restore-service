@@ -32,7 +32,7 @@ export async function primaryProcess() {
     const label = "Primary";
     logger.warn(undefined, label, `Process ${process.pid} started`);
 
-    const workers: {[system: string]: Worker} = {};
+    const workers: { [system: string]: Worker } = {};
 
     Object.keys(TARGETS).forEach(async (system) => {
         workers[system] = await forkProcess(system);
@@ -41,6 +41,6 @@ export async function primaryProcess() {
             logger.warn(undefined, label, `Attempt to re-initiate ${system} process`);
             delete workers[system];
             workers[system] = await forkProcess(system);
-        })
+        });
     });
 }
