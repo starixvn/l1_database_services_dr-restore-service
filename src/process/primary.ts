@@ -2,7 +2,9 @@ import cluster, { Worker } from "cluster";
 import { TARGETS } from "../app-config";
 import { logger } from "../modules";
 
-async function forkProcess(system: string): Promise<Worker> {
+type WorkerTracker = { [system: string]: Worker };
+
+async function forkProcess(system: keyof WorkerTracker): Promise<Worker> {
     const label = `Primary Fork ${system}`;
     const worker = cluster.fork({ SERVICE_SYSTEM: system });
 
@@ -28,19 +30,23 @@ async function forkProcess(system: string): Promise<Worker> {
     return worker;
 }
 
+async function registerProcess(workers: WorkerTracker, system: keyof WorkerTracker) {
+    delete workers[system];
+
+    const process: Worker = await forkProcess(system);
+    workers[system] = process;
+    process.once("exit", async () => {
+        logger.info(undefined, `Exiting ${system} worker`, `Attempt to re-initiate ${system} process`);
+        await new Promise((resolve) => setTimeout(resolve, 3600 * 1000)); // 1 hour
+        await registerProcess(workers, system);
+    });
+}
+
 export async function primaryProcess() {
     const label = "Primary";
     logger.warn(undefined, label, `Process ${process.pid} started`);
 
-    const workers: {[system: string]: Worker} = {};
+    const workers: WorkerTracker = {};
 
-    Object.keys(TARGETS).forEach(async (system) => {
-        workers[system] = await forkProcess(system);
-        workers[system].on("exit", async () => {
-            await new Promise((resolve) => setTimeout(resolve, 60000));
-            logger.warn(undefined, label, `Attempt to re-initiate ${system} process`);
-            delete workers[system];
-            workers[system] = await forkProcess(system);
-        })
-    });
+    Object.keys(TARGETS).forEach(async (system) => registerProcess(workers, system));
 }

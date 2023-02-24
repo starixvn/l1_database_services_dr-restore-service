@@ -7,25 +7,20 @@ const { API_KEY, CHAT_ID } = TELEGRAM_CONFIG;
 const telegramBot = new Telegram(API_KEY);
 const defaultChatId = 925798134;
 
-
 type LogLevel = "trace" | "debug" | "info" | "warn" | "err" | "fatal";
 
-const EMOTICON = {
+const EMOTICON: Partial<{ [key in LogLevel]: string }> = {
     warn: `⚠️ *${escapeMarkdownV2("-WARNING-")}*`,
     err: `🔥 *${escapeMarkdownV2("--ERROR--")}*`,
     fatal: `☠️ *${escapeMarkdownV2("==FATAL==")}*`,
-}
+};
 
 function buildTelegramMessage(level: LogLevel, message?: unknown, label?: string, subject?: string): string {
     const teleLabel = escapeMarkdownV2(label ? `[ DR Restore ${label} ]` : "");
-    const teleSubject = escapeMarkdownV2(subject);
+    const teleSubject = escapeMarkdownV2(subject ?? "");
     const teleMessage = message instanceof Error ? escapeMarkdownV2(message.stack ?? message.toString()) : String(message ?? "");
 
-    return [
-        [EMOTICON[level]].filter(Boolean).join(""),
-        [teleLabel, teleSubject].filter(Boolean).join(" \\- "),
-        teleMessage,
-    ].filter(Boolean).join("\n");
+    return [[EMOTICON[level]].filter(Boolean).join(""), [teleLabel, teleSubject].filter(Boolean).join(" \\- "), teleMessage].filter(Boolean).join("\n");
 }
 
 export function escapeMarkdownV2(input: string): string {
