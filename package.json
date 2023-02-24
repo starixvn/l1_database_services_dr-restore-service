@@ -17,8 +17,11 @@
     "push:version": "docker push \"hub.lumigame.com/ldb/${npm_package_name}:${npm_package_version}\"",
     "push:latest": "docker push \"hub.lumigame.com/ldb/${npm_package_name}:latest\"",
     "push:docker": "yarn run tag:latest && yarn run push:version && yarn run push:latest",
-    "prepublish": "yarn run build:docker",
-    "publish": "yarn run push:docker"
+    "publish": "yarn run build:docker",
+    "publish:patch": "yarn run build:patch",
+    "publish:minor": "yarn run build:minor",
+    "publish:major": "yarn run build:major",
+    "postpublish": "yarn run push:docker"
   },
   "license": "ISC",
   "type": "module",
