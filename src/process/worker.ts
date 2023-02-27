@@ -52,10 +52,10 @@ function filterFtpFiles(file: ListingElement, startDate?: Date, endDate?: Date):
 
     let result = true;
     if (result && startDate) {
-        result &&= startDate.valueOf() < date.valueOf();
+        result = startDate.valueOf() < date.valueOf();
     }
     if (result && endDate) {
-        result &&= endDate.valueOf() > date.valueOf();
+        result = endDate.valueOf() > date.valueOf();
     }
     return result;
 }
@@ -113,13 +113,17 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
 }
 
 async function startupProcess(handlers: Handlers, system: string, target: SystemTarget) {
+    const label = `Startup ${system}`;
+
     const { ftpClient } = handlers;
     const { ftpPath } = target;
     const squashFiles = await ftpClient.list(`${ftpPath}/*Squash*`);
     squashFiles.sort(compareDateAsc);
     const latestSquash = squashFiles.pop();
     if (latestSquash) {
-        await fileCleanupProcess(handlers, system, target, latestSquash.date);
+        const { name, date } = latestSquash;
+        logger.info(undefined, label, `Cleanup files before ${name} - ${date.toISOString()}`)
+        await fileCleanupProcess(handlers, system, target, date);
     }
 }
 
