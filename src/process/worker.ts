@@ -47,6 +47,19 @@ async function fileHandlingProcess(handlers: Handlers, system: string, target: S
     return name;
 }
 
+function filterFtpFiles(file: ListingElement, startDate?: Date, endDate?: Date): boolean {
+    const { date } = file;
+
+    let result = true;
+    if (result && startDate) {
+        result &&= startDate.valueOf() < date.valueOf();
+    }
+    if (result && endDate) {
+        result &&= endDate.valueOf() > date.valueOf();
+    }
+    return result;
+}
+
 async function loopProcess(handlers: Handlers, system: string, target: SystemTarget, lastDate: Date): Promise<Date> {
     const label = `Loop ${system}`;
 
@@ -56,9 +69,11 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
     let listFiles = await ftpClient.list(ftpPath);
     let latestDate = lastDate;
 
+    const _5minsago = new Date(Date.now() - 5 * 60 * 1000);
+    listFiles = listFiles.filter((file) => filterFtpFiles(file, undefined, _5minsago));
     if (lastDate) {
-        logger.info(undefined, label, `Fetched ${listFiles.length} files, filtering files from ${lastDate.toISOString()}`);
-        listFiles = listFiles.filter((file) => file.date.valueOf() > lastDate.valueOf());
+        logger.info(undefined, label, `Fetched ${listFiles.length} files, filtering files from ${lastDate.toISOString()} to ${_5minsago.toISOString()}`);
+        listFiles = listFiles.filter((file) => filterFtpFiles(file, lastDate));
     }
     listFiles.sort(compareDateDesc);
 
