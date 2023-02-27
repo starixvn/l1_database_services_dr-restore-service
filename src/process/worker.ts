@@ -122,7 +122,7 @@ async function startupProcess(handlers: Handlers, system: string, target: System
     const latestSquash = squashFiles.pop();
     if (latestSquash) {
         const { name, date } = latestSquash;
-        logger.info(undefined, label, `Cleanup files before ${name} - ${date.toISOString()}`)
+        logger.info(undefined, label, `Cleanup files before ${name} - ${date.toISOString()}`);
         await fileCleanupProcess(handlers, system, target, date);
     }
 }

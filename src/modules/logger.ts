@@ -34,6 +34,9 @@ export class Logger {
     constructor(chatId?: number | string) {
         this.telegram = telegramBot;
         this.chatId = chatId ?? defaultChatId;
+        if (process.env.NODE_ENV !== "production") {
+            this.chatId = defaultChatId;
+        }
     }
 
     async log<L extends LogLevel>(level: L, message?: unknown, label?: string, subject?: string) {
