@@ -36,6 +36,7 @@ export class Logger {
         this.chatId = chatId ?? defaultChatId;
         if (process.env.NODE_ENV !== "production") {
             this.chatId = defaultChatId;
+            Console.Config.setAll();
         }
     }
 
