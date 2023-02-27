@@ -23,4 +23,4 @@ RUN git config --global user.email "dr@luminet.vn" \
  && git config --global safe.directory "*"
 VOLUME [ "/files", "/secrets" ]
 
-CMD [ "ts-node-esm", "--experimentalSpecifierResolution=node", "./src/app.ts" ]
+CMD [ "yarn", "run", "exec:ts" ]
