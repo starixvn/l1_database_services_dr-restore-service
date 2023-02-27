@@ -44,6 +44,7 @@ async function registerProcess(workers: WorkerTracker, system: keyof WorkerTrack
 
 export async function primaryProcess() {
     const { npm_package_name, npm_package_version } = process.env;
+
     const label = [npm_package_name, npm_package_version].filter(Boolean).join(":");
     logger.warn(undefined, label, `Process ${process.pid} started`);
 

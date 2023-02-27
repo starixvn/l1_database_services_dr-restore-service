@@ -1,7 +1,7 @@
 import { ListingElement } from "sc-ts-ftp";
 import { FTP_CONFIG, PRIVATE_KEY_PATH, TARGETS } from "../app-config";
 import { Git, escapeMarkdownV2, logger } from "../modules";
-import { compareDateAsc, compareDateDesc, connectFTP, deleteFilesBeforeTime, downloadAndDecryptFile, isSquashFile, readPrivateKeyFile, rimraf } from "../utils";
+import { compareDateAsc, compareDateDesc, connectFTP, deleteFilesBeforeTime, downloadAndDecryptFile, isSquashFile, readPrivateKeyFile, rimraf, updatePatchTime } from "../utils";
 import { ErrorWithCode, Handlers, SystemTarget } from "../interfaces";
 import { resolve } from "path";
 
@@ -47,17 +47,17 @@ async function fileHandlingProcess(handlers: Handlers, system: string, target: S
     return name;
 }
 
-function filterFtpFiles(file: ListingElement, startDate?: Date, endDate?: Date): boolean {
+function filterFtpFileByTime(file: ListingElement, startDate?: Date, endDate?: Date): boolean {
     const { date } = file;
 
-    let result = true;
-    if (result && startDate) {
-        result = startDate.valueOf() < date.valueOf();
+    if (startDate && startDate.valueOf() >= date.valueOf()) {
+        return false;
     }
-    if (result && endDate) {
-        result = endDate.valueOf() > date.valueOf();
+    if (endDate && endDate.valueOf() <= date.valueOf()) {
+        return false;
     }
-    return result;
+
+    return true;
 }
 
 async function loopProcess(handlers: Handlers, system: string, target: SystemTarget, lastDate: Date): Promise<Date> {
@@ -66,14 +66,16 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
     const { ftpClient } = handlers;
     const { ftpPath } = target;
 
-    let listFiles = await ftpClient.list(ftpPath);
+    let listFiles = (await ftpClient.list(ftpPath)).map(updatePatchTime);
+    logger.debug(undefined, label, `Fetched ${listFiles.length} from ftp server`)
     let latestDate = lastDate;
 
     const _5minsago = new Date(Date.now() - 5 * 60 * 1000);
-    listFiles = listFiles.filter((file) => filterFtpFiles(file, undefined, _5minsago));
+    listFiles = listFiles.filter((file) => filterFtpFileByTime(file, undefined, _5minsago));
+    logger.debug(undefined, label, `Fetched ${listFiles.length} files, filtering files to ${_5minsago.toISOString()}`)
     if (lastDate) {
         logger.info(undefined, label, `Fetched ${listFiles.length} files, filtering files from ${lastDate.toISOString()} to ${_5minsago.toISOString()}`);
-        listFiles = listFiles.filter((file) => filterFtpFiles(file, lastDate));
+        listFiles = listFiles.filter((file) => filterFtpFileByTime(file, lastDate));
     }
     listFiles.sort(compareDateDesc);
 
@@ -84,6 +86,7 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
 
     logger.info(undefined, label, `Listed ${listFiles.length} files to process`);
 
+    /** If bug file in use still persist, update this code to length > 1 to exclude latest file */
     let file: ListingElement | undefined;
     while (listFiles.length > 0) {
         try {

@@ -4,4 +4,4 @@ export { decryptFile, readPrivateKeyFile } from "./pgp-actions";
 export { downloadAndDecryptFile } from "./composite-actions";
 export { ExecFileOptions, ExecOutput, execute } from "./process-actions";
 
-export { compareDateAsc, compareDateDesc } from "./common";
+export { compareDateAsc, compareDateDesc, updatePatchTime } from "./common";
