@@ -79,9 +79,9 @@
     "@types/node" "*"
 
 "@types/node@*", "@types/node@^18.11.19":
-  version "18.14.0"
-  resolved "http://npm.lumigame.com/@types%2fnode/-/node-18.14.0.tgz#94c47b9217bbac49d4a67a967fdcdeed89ebb7d0"
-  integrity sha512-5EWrvLmglK+imbCJY0+INViFWUHg1AHel1sq4ZVSfdcNqGy9Edv3UB9IIzzg+xPaUcAgZYcfVs2fBcwDeZzU0A==
+  version "18.14.2"
+  resolved "http://npm.lumigame.com/@types%2fnode/-/node-18.14.2.tgz#c076ed1d7b6095078ad3cf21dfeea951842778b1"
+  integrity sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -211,9 +211,9 @@ node-fetch@^2.6.7:
     whatwg-url "^5.0.0"
 
 openpgp@^5.5.0:
-  version "5.6.0"
-  resolved "http://npm.lumigame.com/openpgp/-/openpgp-5.6.0.tgz#2bbcce109f789d7d9b317fbdec7cc3cd4dc7dbac"
-  integrity sha512-m0UGCSefapbPssLmxJ7z7KydLEdpWjaY5gXoxZgTuNeWDfeRG5lzaORWNxyKg1K4tJnRwSoTp01Vtt8Cenbmgw==
+  version "5.7.0"
+  resolved "http://npm.lumigame.com/openpgp/-/openpgp-5.7.0.tgz#fe0a346f26171ffb726636ae7ccb24a504281dbc"
+  integrity sha512-wchYJQfFbSaocUvUIYqNrWD+lRSmFSG1d3Ak2CHeXFocDSEsf7Uc1zUzHjSdlZPTvGeeXPQ+MJrwVtalL4QCBg==
   dependencies:
     asn1.js "^5.0.0"
 

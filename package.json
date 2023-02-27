@@ -9,7 +9,7 @@
     "demo": "ts-node-esm --experimentalSpecifierResolution=node ./src/app-demo.ts",
     "build:node": "rimraf dist && tsc",
     "build:docker": "docker build --tag \"hub.lumigame.com/ldb/${npm_package_name}:${npm_package_version}\" --file Dockerfile .",
-    "build:commit": "git add package.json && git commit -m \"build(docker): version ${npm_package_version}\"",
+    "build:commit": "git add package.json yarn.lock && git commit -m \"build(docker): version ${npm_package_version}\"",
     "build:patch": "yarn version --patch --no-git-tag-version && yarn run build:docker && yarn run build:commit",
     "build:minor": "yarn version --minor --no-git-tag-version && yarn run build:docker && yarn run build:commit",
     "build:major": "yarn version --major --no-git-tag-version && yarn run build:docker && yarn run build:commit",
