@@ -70,11 +70,8 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
     logger.debug(undefined, label, `Fetched ${listFiles.length} from ftp server`)
     let latestDate = lastDate;
 
-    const _5minsago = new Date(Date.now() - 5 * 60 * 1000);
-    listFiles = listFiles.filter((file) => filterFtpFileByTime(file, undefined, _5minsago));
-    logger.debug(undefined, label, `Fetched ${listFiles.length} files, filtering files to ${_5minsago.toISOString()}`)
     if (lastDate) {
-        logger.info(undefined, label, `Fetched ${listFiles.length} files, filtering files from ${lastDate.toISOString()} to ${_5minsago.toISOString()}`);
+        logger.info(undefined, label, `Fetched ${listFiles.length} files, filtering files from ${lastDate.toISOString()}`);
         listFiles = listFiles.filter((file) => filterFtpFileByTime(file, lastDate));
     }
     listFiles.sort(compareDateDesc);
@@ -88,7 +85,7 @@ async function loopProcess(handlers: Handlers, system: string, target: SystemTar
 
     /** If bug file in use still persist, update this code to length > 1 to exclude latest file */
     let file: ListingElement | undefined;
-    while (listFiles.length > 0) {
+    while (listFiles.length > 1) {
         try {
             file = listFiles.pop();
             if (!file) {
